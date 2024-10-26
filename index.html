@@ -49,14 +49,21 @@
         const messageInput = document.getElementById('message');
         const sendButton = document.getElementById('send');
 
+        // Connect to the WebSocket server
+        const socket = new WebSocket('ws://localhost:8080');
+
+        socket.addEventListener('message', (event) => {
+            const messageElement = document.createElement('p');
+            messageElement.textContent = event.data;
+            chat.appendChild(messageElement);
+            chat.scrollTop = chat.scrollHeight; // Scroll to the bottom
+        });
+
         sendButton.addEventListener('click', () => {
             const message = messageInput.value;
             if (message) {
-                const messageElement = document.createElement('p');
-                messageElement.textContent = message;
-                chat.appendChild(messageElement);
+                socket.send(message);
                 messageInput.value = '';
-                chat.scrollTop = chat.scrollHeight; // Scroll to the bottom
             }
         });
 
